@@ -1,11 +1,22 @@
+version: '3.8'
+
 services:
   apache:
-    build: apache-php-lamp
+    build: ./apache-php-lamp
+    container_name: lamp_apache_prod
+    restart: always
+    env_file:
+      - .env.prod
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      ./prestashop_8.2.1:/app
-      #vhost apache
-      #php.ini
-      #certificados
+      - ./prestashop_8.2.1:/var/www/html
+      - ./apache-php-lamp/vhost-apache.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./apache-php-lamp/php.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./apache-php-lamp/certificados:/etc/ssl/certs
+    networks:
+      - redelamplemp
+
+networks:
+  redelamplemp:

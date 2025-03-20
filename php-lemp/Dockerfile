@@ -1,20 +1,23 @@
-FROM debian:12
+FROM php:8.2-fpm
 
+# Instalar dependencias del sistema necesarias para compilar extensiones PHP
+RUN apt update && apt install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    libxml2-dev \
+    libcurl4-openssl-dev \
+    libonig-dev \
+    unzip \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install \
+        pdo_mysql \
+        gd \
+        zip \
+        xml \
+        curl \
+        mbstring \
+        intl
 
-#Instalar paquetes necesarios (php-fpm extensions php)
-# RUN apt update && apt install -y \
-#     curl \
-#     wget \
-#     git \
-#     && rm -rf /var/lib/apt/lists/* /var/cache/apt/*
-
-#Instalar composer
-
-#Instalar ferramentas npm se son necesarias
-
-#Instrucción para que o contedor escoite nun porto e non nun socket
-
-EXPOSE
-
-#Instruciónn para que o servizo php-fpm se inicie
-CMD ["..."]
+CMD ["php-fpm"]
